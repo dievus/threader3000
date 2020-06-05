@@ -63,5 +63,5 @@ total = t2 - t1
 print("Port scan completed in "+str(total))
 print("-" * 50)
 
-print("Press any button to exit...")
+print("Press the Enter button to exit...")
 input()
