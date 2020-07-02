@@ -3,6 +3,7 @@
 import socket
 import time
 import threading
+import sys
 from queue import Queue
 from datetime import datetime
 
@@ -16,12 +17,18 @@ print("A project by The Mayor/Dievus")
 print("-" * 50)
 time.sleep(1)
 target = input("Enter your target IP address or URL here: ")
-t_IP = socket.gethostbyname(target)
+error = ("Invalid Input!")
+
+try:
+	t_ip = socket.gethostbyname(target)
+except Exception:
+	print("\n\033[91m{}\033[00m".format(error))
+	sys.exit()
 
 #Banner
 print("-" * 50)
-print("Scanning target "+t_IP)
-print("Time started: "+str(datetime.now()))
+print("Scanning target " + t_ip)
+print("Time started: " + str(datetime.now()))
 print("-" * 50)
 t1 = datetime.now()
 
@@ -30,7 +37,7 @@ def portscan(port):
    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
    
    try:
-      conx = s.connect((t_IP, port))
+      conx = s.connect((t_ip, port))
       with print_lock:
          print("Port {} is open".format(port))
       conx.close()
