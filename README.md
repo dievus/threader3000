@@ -7,7 +7,6 @@
 <h5>Python3 must be installed on your system in order to function</h5>
 
 <h4>Installation</h4>
-<br>
 Threader3000 is NOW available to download from the pip repository.  Run pip3 install threader3000 to install on your machine.
 <br>
 <h5>git clone https://github.com/dievus/threader3000.git to save the program to your machine, or utilize the download option.</h5>
