@@ -6,12 +6,11 @@
 <h4>Requirements:</h4>
 <h5>Python3 must be installed on your system in order to function</h5>
 
-<h3>Installation</h3>
-Installation via Pip
+<h2>Installation</h2>
+<h4>Installation via Pip</h4>
 <h5>pip3 install threader3000</h5>
 <h5>Run by typing "threader3000"</h5>
-
-Install via Git
+<h4>Install via Git</h4>
 <h5>git clone https://github.com/dievus/threader3000.git to save the program to your machine, or utilize the download option.</h5>
 You can add Threader3000 to run from any directory by adding a symbolic link:
 <h5>sudo ln -s /threader3000.py /usr/local/bin/</h5>
