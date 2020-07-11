@@ -10,7 +10,7 @@
 Installation via Pip
 <h5>pip3 install threader3000</h5>
 <h5>Run by typing "threader3000"</h5>
-<br>
+
 Install via Git
 <h5>git clone https://github.com/dievus/threader3000.git to save the program to your machine, or utilize the download option.</h5>
 You can add Threader3000 to run from any directory by adding a symbolic link:
