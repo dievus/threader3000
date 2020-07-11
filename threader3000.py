@@ -1,27 +1,34 @@
 #!/usr/bin/python3
 
 import socket
+import signal
 import time
 import threading
+import sys
+import subprocess
 from queue import Queue
 from datetime import datetime
 
 socket.setdefaulttimeout(0.55)
 print_lock = threading.Lock()
- 
+
 #Welcome
 print("-" * 50)
-print("Python Port Scanner 3000")
-print("A project by The Mayor/Dievus")
+print("Threader 3000 - Multi-threaded Port Scanner")
+print("A project by The Mayor")
 print("-" * 50)
 time.sleep(1)
 target = input("Enter your target IP address or URL here: ")
-t_IP = socket.gethostbyname(target)
-
+error = ("Invalid Input")
+try:
+    t_ip = socket.gethostbyname(target)
+except Exception:
+    print("\n[-]Invalid format. Please use a correct IP or web address[-]\n")
+    sys.exit()
 #Banner
 print("-" * 50)
-print("Scanning target "+t_IP)
-print("Time started: "+str(datetime.now()))
+print("Scanning target "+ t_ip)
+print("Time started: "+ str(datetime.now()))
 print("-" * 50)
 t1 = datetime.now()
 
@@ -30,7 +37,7 @@ def portscan(port):
    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
    
    try:
-      conx = s.connect((t_IP, port))
+      conx = s.connect((t_ip, port))
       with print_lock:
          print("Port {} is open".format(port))
       conx.close()
@@ -63,5 +70,5 @@ total = t2 - t1
 print("Port scan completed in "+str(total))
 print("-" * 50)
 
-print("Press the Enter button to exit...")
+print("Press any button to exit...")
 input()
