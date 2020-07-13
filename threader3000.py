@@ -1,4 +1,10 @@
 #!/usr/bin/python3
+# Threader3000 - Multi-threader Port Scanner
+# A project by The Mayor
+# v1.0.2
+# https://github.com/dievus/threader3000
+# Licensed under GNU GPLv3 Standards.  https://www.gnu.org/licenses/gpl-3.0.en.html
+
 
 import socket
 import signal
@@ -9,15 +15,20 @@ import subprocess
 from queue import Queue
 from datetime import datetime
 
+# Start Threader3000 with clear terminal
+subprocess.call('clear', shell=True)
+
+# Main Function
 def main():
-    socket.setdefaulttimeout(0.55)
+    socket.setdefaulttimeout(0.30)
     print_lock = threading.Lock()
 
-    #Welcome
-    print("-" * 50)
-    print("Threader 3000 - Multi-threaded Port Scanner")
-    print("A project by The Mayor")
-    print("-" * 50)
+# Welcome Banner
+    print("-" * 60)
+    print("        Threader 3000 - Multi-threaded Port Scanner          ")
+    print("                       Version 1.0.2                    ")
+    print("                   A project by The Mayor               ")
+    print("-" * 60)
     time.sleep(1)
     target = input("Enter your target IP address or URL here: ")
     error = ("Invalid Input")
@@ -27,10 +38,10 @@ def main():
         print("\n[-]Invalid format. Please use a correct IP or web address[-]\n")
         sys.exit()
     #Banner
-    print("-" * 50)
+    print("-" * 60)
     print("Scanning target "+ t_ip)
     print("Time started: "+ str(datetime.now()))
-    print("-" * 50)
+    print("-" * 60)
     t1 = datetime.now()
 
     def portscan(port):
@@ -69,9 +80,9 @@ def main():
     t2 = datetime.now()
     total = t2 - t1
     print("Port scan completed in "+str(total))
-    print("-" * 50)
+    print("-" * 60)
 
-    print("Press any button to exit...")
+    print("Press Enter to exit...")
     input()
 
 if __name__ == '__main__':
