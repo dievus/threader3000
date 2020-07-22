@@ -11,7 +11,6 @@ import signal
 import time
 import threading
 import sys
-import os
 import subprocess
 from queue import Queue
 from datetime import datetime
