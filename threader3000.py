@@ -1,12 +1,13 @@
 #!/usr/bin/python3
 # Threader3000 - Multi-threader Port Scanner
 # A project by The Mayor
-# v1.0.3
+# v1.0.4
 # https://github.com/dievus/threader3000
 # Licensed under GNU GPLv3 Standards.  https://www.gnu.org/licenses/gpl-3.0.en.html
 
 
 import socket
+import os
 import signal
 import time
 import threading
@@ -22,20 +23,20 @@ subprocess.call('clear', shell=True)
 def main():
     socket.setdefaulttimeout(0.30)
     print_lock = threading.Lock()
-    discovered_ports = [] # store discovered ports in here for later use
+    discovered_ports = []
 
 # Welcome Banner
     print("-" * 60)
     print("        Threader 3000 - Multi-threaded Port Scanner          ")
-    print("                       Version 1.0.2                    ")
+    print("                       Version 1.0.4                    ")
     print("                   A project by The Mayor               ")
     print("-" * 60)
     time.sleep(1)
-        # if user hasn't passed address via cmdline arg ask user for target address
     target = input("Enter your target IP address or URL here: ")
+    error = ("Invalid Input")
     try:
         t_ip = socket.gethostbyname(target)
-    except Exception:
+    except (UnboundLocalError, socket.gaierror):
         print("\n[-]Invalid format. Please use a correct IP or web address[-]\n")
         sys.exit()
     #Banner
@@ -56,7 +57,7 @@ def main():
              discovered_ports.append(str(port))
           conx.close()
 
-       except:
+       except (ConnectionRefusedError, AttributeError, OSError):
           pass
 
     def threader():
@@ -67,7 +68,9 @@ def main():
       
     q = Queue()
      
-    for _ in range(200):
+    #startTime = time.time()
+     
+    for x in range(200):
        t = threading.Thread(target = threader)
        t.daemon = True
        t.start()
@@ -81,21 +84,47 @@ def main():
     total = t2 - t1
     print("Port scan completed in "+str(total))
     print("-" * 60)
-    # print suggested nmap scan with:
-    # -sV service and version detection
-    # -sC common scripts
-    # -o scan.nmap save output to file
     print("Threader3000 recommends the following Nmap scan:")
-    print("-" * 60)
-    print("nmap -p{ports} -sV -sC -o scan.nmap {ip}".format(ports=",".join(discovered_ports), ip=target))
-    print("-" * 60)
-    print("Press Enter to exit...")
-    input()
+    print("*" * 60)
+    print("nmap -p{ports} -sV -sC -T4 -Pn {ip}".format(ports=",".join(discovered_ports), ip=target))
+    print("*" * 60)
+    outfile = "nmap -p{ports} -sV -sC -Pn -T4 {ip}".format(ports=",".join(discovered_ports), ip=target)
+    t3 = datetime.now()
+    total1 = t3 - t1
+
+#Nmap Integration (in progress)
+
+    def automate():
+       choice = '0'
+       while choice =='0':
+          print("Would you like to run Nmap or quit to terminal?")
+          print("-" * 60)
+          print("1 = Run suggested Nmap scan")
+          print("2 = Run another Threader3000 scan")
+          print("3 = Exit to terminal")
+          print("-" * 60)
+          choice = input("Option Selection: ")
+          if choice == "1":
+             print(outfile)
+             os.system(outfile)
+             t3 = datetime.now()
+             total1 = t3 - t1
+             print("-" * 60)
+             print("Combined scan completed in "+str(total1))
+             print("Press enter to quit...")
+             input()
+          elif choice =="2":
+             main()
+          elif choice =="3":
+             sys.exit()
+          else:
+             print("Please make a valid selection")
+             automate()
+    automate()
 
 if __name__ == '__main__':
     try:
         main()
     except KeyboardInterrupt:
-        print()
+        print("\nGoodbye!")
         quit()
-        
