@@ -31,11 +31,8 @@ def main():
     print("                   A project by The Mayor               ")
     print("-" * 60)
     time.sleep(1)
-    if len(sys.argv) < 2:
         # if user hasn't passed address via cmdline arg ask user for target address
-        target = input("Enter your target IP address or URL here: ")
-    else:
-        target = sys.argv[1]
+    target = input("Enter your target IP address or URL here: ")
     try:
         t_ip = socket.gethostbyname(target)
     except Exception:
@@ -84,14 +81,14 @@ def main():
     total = t2 - t1
     print("Port scan completed in "+str(total))
     print("-" * 60)
-
     # print suggested nmap scan with:
     # -sV service and version detection
     # -sC common scripts
     # -o scan.nmap save output to file
-    print("suggested nmap:")
+    print("Threader3000 recommends the following Nmap scan:")
+    print("-" * 60)
     print("nmap -p{ports} -sV -sC -o scan.nmap {ip}".format(ports=",".join(discovered_ports), ip=target))
-
+    print("-" * 60)
     print("Press Enter to exit...")
     input()
 
