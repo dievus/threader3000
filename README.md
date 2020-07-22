@@ -20,4 +20,4 @@ You can add Threader3000 to run from any directory by adding a symbolic link:
 ```bash
 sudo ln -s $(pwd)/threader3000.py /usr/local/bin/threader3000
 ```
-
+##Threader 3000 now has integrated Nmap functionality.  Run a scan against your target and then selecte the "Run suggested Nmap scan" option to execute a targetted nmap scan.
