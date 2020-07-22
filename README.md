@@ -21,18 +21,3 @@ You can add Threader3000 to run from any directory by adding a symbolic link:
 sudo ln -s $(pwd)/threader3000.py /usr/local/bin/threader3000
 ```
 
-### usage
-enter with an address on the command line
-```bash
-threader3000 127.0.0.1
-```
-If no address specified on command line threader3000 will ask you for an address
-```bash
-threader3000
-------------------------------------------------------------
-        Threader 3000 - Multi-threaded Port Scanner          
-                       Version 1.0.2                    
-                   A project by The Mayor               
-------------------------------------------------------------
-Enter your target IP address or URL here: 127.0.0.1
-```
