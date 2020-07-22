@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # Threader3000 - Multi-threader Port Scanner
 # A project by The Mayor
-# v1.0.4
+# v1.0.6
 # https://github.com/dievus/threader3000
 # Licensed under GNU GPLv3 Standards.  https://www.gnu.org/licenses/gpl-3.0.en.html
 
@@ -28,7 +28,7 @@ def main():
 # Welcome Banner
     print("-" * 60)
     print("        Threader 3000 - Multi-threaded Port Scanner          ")
-    print("                       Version 1.0.4                    ")
+    print("                       Version 1.0.6                    ")
     print("                   A project by The Mayor               ")
     print("-" * 60)
     time.sleep(1)
@@ -86,9 +86,9 @@ def main():
     print("-" * 60)
     print("Threader3000 recommends the following Nmap scan:")
     print("*" * 60)
-    print("nmap -p{ports} -sV -sC -T4 -Pn {ip}".format(ports=",".join(discovered_ports), ip=target))
+    print("nmap -p{ports} -sV -sC -T4 -Pn -oA {ip} {ip}".format(ports=",".join(discovered_ports), ip=target))
     print("*" * 60)
-    outfile = "nmap -p{ports} -sV -sC -Pn -T4 {ip}".format(ports=",".join(discovered_ports), ip=target)
+    outfile = "nmap -p{ports} -sV -sC -Pn -T4 -oA {ip} {ip}".format(ports=",".join(discovered_ports), ip=target)
     t3 = datetime.now()
     total1 = t3 - t1
 
@@ -105,14 +105,23 @@ def main():
           print("-" * 60)
           choice = input("Option Selection: ")
           if choice == "1":
-             print(outfile)
-             os.system(outfile)
-             t3 = datetime.now()
-             total1 = t3 - t1
-             print("-" * 60)
-             print("Combined scan completed in "+str(total1))
-             print("Press enter to quit...")
-             input()
+             try:
+                print(outfile)
+                os.mkdir(target)
+                os.chdir(target)
+                os.system(outfile)
+                #The xsltproc is experimental and will convert XML to a HTML readable format; requires xsltproc on your machine to work
+                #convert = "xsltproc "+target+".xml -o "+target+".html"
+                #os.system(convert)
+                t3 = datetime.now()
+                total1 = t3 - t1
+                print("-" * 60)
+                print("Combined scan completed in "+str(total1))
+                print("Press enter to quit...")
+                input()
+             except FileExistsError as e:
+                print(e)
+                exit()
           elif choice =="2":
              main()
           elif choice =="3":
