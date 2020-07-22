@@ -11,7 +11,28 @@
 <h5>pip3 install threader3000</h5>
 <h5>Run by typing "threader3000"</h5>
 <h4>Install via Git</h4>
-<h5>git clone https://github.com/dievus/threader3000.git to save the program to your machine, or utilize the download option.</h5>
+
+```bash
+git clone https://github.com/dievus/threader3000.git #to save the program to your machine, or utilize the download option
+```
 You can add Threader3000 to run from any directory by adding a symbolic link:
-<h5>sudo ln -s /threader3000.py /usr/local/bin/</h5>
-<h6>Note that you will need to replace the threader3000.py above with the directory location of the program.  Once done, you should be able to run it from anywhere in a Linux terminal.</h6>
+
+```bash
+sudo ln -s $(pwd)/threader3000.py /usr/local/bin/threader3000
+```
+
+### usage
+enter with an address on the command line
+```bash
+threader3000 127.0.0.1
+```
+If no address specified on command line threader3000 will ask you for an address
+```bash
+threader3000
+------------------------------------------------------------
+        Threader 3000 - Multi-threaded Port Scanner          
+                       Version 1.0.2                    
+                   A project by The Mayor               
+------------------------------------------------------------
+Enter your target IP address or URL here: 127.0.0.1
+```

@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # Threader3000 - Multi-threader Port Scanner
 # A project by The Mayor
-# v1.0.2
+# v1.0.3
 # https://github.com/dievus/threader3000
 # Licensed under GNU GPLv3 Standards.  https://www.gnu.org/licenses/gpl-3.0.en.html
 
@@ -11,6 +11,7 @@ import signal
 import time
 import threading
 import sys
+import os
 import subprocess
 from queue import Queue
 from datetime import datetime
@@ -22,6 +23,7 @@ subprocess.call('clear', shell=True)
 def main():
     socket.setdefaulttimeout(0.30)
     print_lock = threading.Lock()
+    discovered_ports = [] # store discovered ports in here for later use
 
 # Welcome Banner
     print("-" * 60)
@@ -30,8 +32,11 @@ def main():
     print("                   A project by The Mayor               ")
     print("-" * 60)
     time.sleep(1)
-    target = input("Enter your target IP address or URL here: ")
-    error = ("Invalid Input")
+    if len(sys.argv) < 2:
+        # if user hasn't passed address via cmdline arg ask user for target address
+        target = input("Enter your target IP address or URL here: ")
+    else:
+        target = sys.argv[1]
     try:
         t_ip = socket.gethostbyname(target)
     except Exception:
@@ -52,6 +57,7 @@ def main():
           conx = s.connect((t_ip, port))
           with print_lock:
              print("Port {} is open".format(port))
+             discovered_ports.append(str(port))
           conx.close()
 
        except:
@@ -65,9 +71,7 @@ def main():
       
     q = Queue()
      
-    startTime = time.time()
-     
-    for x in range(200):
+    for _ in range(200):
        t = threading.Thread(target = threader)
        t.daemon = True
        t.start()
@@ -81,6 +85,13 @@ def main():
     total = t2 - t1
     print("Port scan completed in "+str(total))
     print("-" * 60)
+
+    # print suggested nmap scan with:
+    # -sV service and version detection
+    # -sC common scripts
+    # -o scan.nmap save output to file
+    print("suggested nmap:")
+    print("nmap -p{ports} -sV -sC -o scan.nmap {ip}".format(ports=",".join(discovered_ports), ip=target))
 
     print("Press Enter to exit...")
     input()
