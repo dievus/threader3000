@@ -3,7 +3,7 @@
 
 <h5>Threader3000 is a script written in Python3 that allows multi-threaded port scanning.  The program is interactive and simply requires you to run it to begin.  Once started, you will be asked to input an IP address or a FQDN as Threader3000 does resolve hostnames.  A full port scan should take three minutes or less depending on your internet connection.</h5>
 
-<h5>Threader 3000 now has integrated Nmap functionality.  Run a scan against your target and then selecte the "Run suggested Nmap scan" option to execute a targetted nmap scan.</h5>
+<h4>Threader 3000 now has integrated Nmap functionality.  Run a scan against your target and then selecte the "Run suggested Nmap scan" option to execute a targetted nmap scan.</h4>
 
 <h4>Requirements:</h4>
 <h5>Python3 must be installed on your system in order to function</h5>
