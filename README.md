@@ -23,3 +23,4 @@ You can add Threader3000 to run from any directory by adding a symbolic link:
 sudo ln -s $(pwd)/threader3000.py /usr/local/bin/threader3000
 ```
 
+***Disclaimer - This tool is under a free license for use, however it is up to the user to observe all applicable laws and appropriate uses for this tool.  The creator does not condone, support, suggest, or otherwise promote unethical or illegal behavior.  You use this tool at your own risk, and under the assumption that you are utilizing it against targets and infrastructure to which you have permission to do so.  Any use otherwise is at your peril and against the terms of use for the tool.***
