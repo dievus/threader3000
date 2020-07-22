@@ -1,5 +1,5 @@
 # Threader3000
-<h4>Multi-threaded Python Port Scanner for use on Linux or Windows
+<h4>Multi-threaded Python Port Scanner with Nmap integration for use on Linux or Windows
 
 <h5>Threader3000 is a script written in Python3 that allows multi-threaded port scanning.  The program is interactive and simply requires you to run it to begin.  Once started, you will be asked to input an IP address or a FQDN as Threader3000 does resolve hostnames.  A full port scan should take three minutes or less depending on your internet connection.</h5>
 
