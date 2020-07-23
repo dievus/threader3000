@@ -35,7 +35,7 @@ sudo ln -s $(pwd)/threader3000.py /usr/local/bin/threader3000
 
 **Can I use this tool to scan Facebook or other websites I don't have permission to scan?**
 
-***No. That would be illegal.  This tool is under a free license for use, however it is up to the user to observe all applicable laws and appropriate uses for this tool.  The creator does not condone, support, suggest, or otherwise promote unethical or illegal behavior.  You use this tool at your own risk, and under the assumption that you are utilizing it against targets and infrastructure to which you have permission to do so.  Any use otherwise is at your peril and against the terms of use for the tool.***
+*No. That would be illegal.  This tool is under a free license for use, however it is up to the user to observe all applicable laws and appropriate uses for this tool.  The creator does not condone, support, suggest, or otherwise promote unethical or illegal behavior.  You use this tool at your own risk, and under the assumption that you are utilizing it against targets and infrastructure to which you have permission to do so.  Any use otherwise is at your peril and against the terms of use for the tool.*
 
 **Will you please integrate multiple IP addresses and different scanning tools into Threader3000, making it an all-in-one automated scanner?**
 
