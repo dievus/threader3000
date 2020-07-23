@@ -24,6 +24,8 @@ def main():
     socket.setdefaulttimeout(0.30)
     print_lock = threading.Lock()
     discovered_ports = []
+    hostname_list = []
+    t_ip = []
 
 # Welcome Banner
     print("-" * 60)
@@ -35,101 +37,115 @@ def main():
     target = input("Enter your target IP address or URL here: ")
     error = ("Invalid Input")
     try:
-        t_ip = socket.gethostbyname(target)
+        if os.path.isfile(target):
+            with open(target, 'r') as list_file:
+               for line in list_file:
+                  hostname_list.append(socket.gethostbyname(line.strip()))
+        else:
+            hostname_list.append(socket.gethostbyname(target))
+
     except (UnboundLocalError, socket.gaierror):
         print("\n[-]Invalid format. Please use a correct IP or web address[-]\n")
         sys.exit()
-    #Banner
-    print("-" * 60)
-    print("Scanning target "+ t_ip)
-    print("Time started: "+ str(datetime.now()))
-    print("-" * 60)
-    t1 = datetime.now()
 
-    def portscan(port):
+    for t_ip in hostname_list:
+      #Banner
+      print("-" * 60)
+      print("Scanning target "+ t_ip)
+      print("Time started: "+ str(datetime.now()))
+      print("-" * 60)
+      t1 = datetime.now()
 
-       s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-       
-       try:
-          conx = s.connect((t_ip, port))
-          with print_lock:
-             print("Port {} is open".format(port))
-             discovered_ports.append(str(port))
-          conx.close()
+      def portscan(port):
+         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+         
+         try:
+            conx = s.connect((t_ip, port))
+            with print_lock:
+               print("Port {} is open".format(port))
+               discovered_ports.append(str(port))
+            conx.close()
 
-       except (ConnectionRefusedError, AttributeError, OSError):
-          pass
+         except (ConnectionRefusedError, AttributeError, OSError):
+            pass
 
-    def threader():
-       while True:
-          worker = q.get()
-          portscan(worker)
-          q.task_done()
+      def threader():
+         while True:
+            worker = q.get()
+            portscan(worker)
+            q.task_done()
       
-    q = Queue()
-     
-    #startTime = time.time()
-     
-    for x in range(200):
-       t = threading.Thread(target = threader)
-       t.daemon = True
-       t.start()
+      q = Queue()
+      
+      #startTime = time.time()
+      
+      for x in range(200):
+         t = threading.Thread(target = threader)
+         t.daemon = True
+         t.start()
 
-    for worker in range(1, 65535):
-       q.put(worker)
+      for worker in range(1, 65536):
+         q.put(worker)
 
-    q.join()
+      q.join()
 
-    t2 = datetime.now()
-    total = t2 - t1
-    print("Port scan completed in "+str(total))
-    print("-" * 60)
-    print("Threader3000 recommends the following Nmap scan:")
-    print("*" * 60)
-    print("nmap -p{ports} -sV -sC -T4 -Pn -oA {ip} {ip}".format(ports=",".join(discovered_ports), ip=target))
-    print("*" * 60)
-    outfile = "nmap -p{ports} -sV -sC -Pn -T4 -oA {ip} {ip}".format(ports=",".join(discovered_ports), ip=target)
-    t3 = datetime.now()
-    total1 = t3 - t1
+      t2 = datetime.now()
+      total = t2 - t1
+      print("Port scan completed in "+str(total))
+      print("-" * 60)
+      if len(discovered_ports) > 0:
+         print("Threader3000 recommends the following Nmap scan:")
+         print("*" * 60)
+         print("nmap -p{ports} -sV -sC -T4 -Pn -oA {ip} {ip}".format(ports=",".join(discovered_ports), ip=t_ip))
+         print("*" * 60)
+      else:
+         print("No ports found for target {ip}".format(ip=t_ip))
+         print("*" * 60)
+      outfile = "nmap -p{ports} -sV -sC -Pn -T4 -oA {ip} {ip}".format(ports=",".join(discovered_ports), ip=t_ip)
+      t3 = datetime.now()
+      total1 = t3 - t1
 
-#Nmap Integration (in progress)
+   #Nmap Integration (in progress)
 
-    def automate():
-       choice = '0'
-       while choice =='0':
-          print("Would you like to run Nmap or quit to terminal?")
-          print("-" * 60)
-          print("1 = Run suggested Nmap scan")
-          print("2 = Run another Threader3000 scan")
-          print("3 = Exit to terminal")
-          print("-" * 60)
-          choice = input("Option Selection: ")
-          if choice == "1":
-             try:
-                print(outfile)
-                os.mkdir(target)
-                os.chdir(target)
-                os.system(outfile)
-                #The xsltproc is experimental and will convert XML to a HTML readable format; requires xsltproc on your machine to work
-                #convert = "xsltproc "+target+".xml -o "+target+".html"
-                #os.system(convert)
-                t3 = datetime.now()
-                total1 = t3 - t1
-                print("-" * 60)
-                print("Combined scan completed in "+str(total1))
-                print("Press enter to quit...")
-                input()
-             except FileExistsError as e:
-                print(e)
-                exit()
-          elif choice =="2":
-             main()
-          elif choice =="3":
-             sys.exit()
-          else:
-             print("Please make a valid selection")
-             automate()
-    automate()
+      def automate():
+         choice = '0'
+         if len(discovered_ports) > 0:
+            while choice =='0':
+               print("Would you like to run Nmap or quit to terminal?")
+               print("-" * 60)
+               print("1 = Run suggested Nmap scan")
+               print("2 = Run another Threader3000 scan")
+               print("3 = Exit to terminal")
+               print("-" * 60)
+               choice = input("Option Selection: ")
+               if choice == "1":
+                  try:
+                     print(outfile)
+                     os.mkdir(t_ip)
+                     os.chdir(t_ip)
+                     os.system(outfile)
+                     os.chdir('..')
+                     #The xsltproc is experimental and will convert XML to a HTML readable format; requires xsltproc on your machine to work
+                     #convert = "xsltproc "+target+".xml -o "+target+".html"
+                     #os.system(convert)
+                     t3 = datetime.now()
+                     total1 = t3 - t1
+                     print("-" * 60)
+                     print("Combined scan completed in "+str(total1))
+                     print("Press enter to quit...")
+                     discovered_ports.clear()
+                     input()
+                  except FileExistsError as e:
+                     print(e)
+                     exit()
+               elif choice =="2":
+                  main()
+               elif choice =="3":
+                  sys.exit()
+               else:
+                  print("Please make a valid selection")
+                  automate()
+      automate()
 
 if __name__ == '__main__':
     try:

@@ -22,5 +22,14 @@ You can add Threader3000 to run from any directory by adding a symbolic link:
 ```bash
 sudo ln -s $(pwd)/threader3000.py /usr/local/bin/threader3000
 ```
+<h2>Usage</h2>
+<h4>You can load a list of hosts or scan only one host</h4>
+
+```
+Only one host e.g: localhost
+List of hosts e.g: list.txt
+At the moment, only accepts a list of hosts only .txt
+```
+
 
 ***Disclaimer - This tool is under a free license for use, however it is up to the user to observe all applicable laws and appropriate uses for this tool.  The creator does not condone, support, suggest, or otherwise promote unethical or illegal behavior.  You use this tool at your own risk, and under the assumption that you are utilizing it against targets and infrastructure to which you have permission to do so.  Any use otherwise is at your peril and against the terms of use for the tool.***
