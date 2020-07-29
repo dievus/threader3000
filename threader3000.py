@@ -109,7 +109,11 @@ def main():
                 print(outfile)
                 os.mkdir(target)
                 os.chdir(target)
-                os.system(outfile)
+                if os.geteuid() is not 0: # if user is not root
+                   # we are not running as root. Lets elevate priviledges to run nmap as root user.
+                  os.system("sudo " + outfile)
+                else:
+                  os.system(outfile)
                 #The xsltproc is experimental and will convert XML to a HTML readable format; requires xsltproc on your machine to work
                 #convert = "xsltproc "+target+".xml -o "+target+".html"
                 #os.system(convert)
