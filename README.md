@@ -44,3 +44,7 @@ Not as of current.  If you want a tool like that, I suggest [AutoEnum](https://g
 **Will this tool help me pass the OSCP?**
 
 This tool, when used correctly, helped me pass the OSCP exam. The OSCP is all about time management and enumeration. I give you a tool that is quick and conducts good single target scanning.  It's up to you to use it.
+
+**Can I make pull requests with changes that I think are best for Threader3000?**
+
+You can, but these will likely be denied. Threader3000 is a tool I wrote to meet my needs in the field, and I've simply shared it with everyone. If you find an issue that causes significant issues, please report it, however changes to code on how a user thinks it should be better written or how the user feels it should function will be denied.  
