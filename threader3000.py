@@ -75,7 +75,7 @@ def main():
        t.daemon = True
        t.start()
 
-    for worker in range(1, 65535):
+    for worker in range(1, 65536):
        q.put(worker)
 
     q.join()
