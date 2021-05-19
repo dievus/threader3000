@@ -14,6 +14,7 @@ import threading
 import sys
 import subprocess
 from queue import Queue
+from printcolors import *
 from datetime import datetime
 
 # Start Threader3000 with clear terminal
@@ -27,17 +28,17 @@ def main():
 
 # Welcome Banner
     print("-" * 60)
-    print("        Threader 3000 - Multi-threaded Port Scanner          ")
-    print("                       Version 1.0.6                    ")
-    print("                   A project by The Mayor               ")
+    print("     %s   Threader 3000 - Multi-threaded Port Scanner          "%yellow)
+    print("                   %s    Version 1.0.6                    "%yellow)
+    print("              %s     A project by The Mayor         %s      "%(green,white) ) 
     print("-" * 60)
     time.sleep(1)
     target = input("Enter your target IP address or URL here: ")
-    error = ("Invalid Input")
+    error = ("%sInvalid Input"%red)
     try:
         t_ip = socket.gethostbyname(target)
     except (UnboundLocalError, socket.gaierror):
-        print("\n[-]Invalid format. Please use a correct IP or web address[-]\n")
+        print("\n%s%sInvalid format. Please use a correct IP or web address\n"%(bad, red))
         sys.exit()
     #Banner
     print("-" * 60)
@@ -53,7 +54,7 @@ def main():
        try:
           conx = s.connect((t_ip, port))
           with print_lock:
-             print("Port {} is open".format(port))
+             print("%sPort {} is open".format(port)%green)
              discovered_ports.append(str(port))
           conx.close()
 
@@ -84,9 +85,9 @@ def main():
     total = t2 - t1
     print("Port scan completed in "+str(total))
     print("-" * 60)
-    print("Threader3000 recommends the following Nmap scan:")
+    print("%sThreader3000 recommends the following Nmap scan:"%white)
     print("*" * 60)
-    print("nmap -p{ports} -sV -sC -T4 -Pn -oA {ip} {ip}".format(ports=",".join(discovered_ports), ip=target))
+    print("%snmap -p{ports} -sV -sC -T4 -Pn -oA {ip} {ip}".format(ports=",".join(discovered_ports), ip=target)%blue)
     print("*" * 60)
     outfile = "nmap -p{ports} -sV -sC -Pn -T4 -oA {ip} {ip}".format(ports=",".join(discovered_ports), ip=target)
     t3 = datetime.now()
@@ -99,14 +100,14 @@ def main():
        while choice =='0':
           print("Would you like to run Nmap or quit to terminal?")
           print("-" * 60)
-          print("1 = Run suggested Nmap scan")
-          print("2 = Run another Threader3000 scan")
-          print("3 = Exit to terminal")
+          print("%s1 = Run suggested Nmap scan"%green)
+          print("%s2 = Run another Threader3000 scan"%green)
+          print("%s3 = Exit to terminal"%green)
           print("-" * 60)
           choice = input("Option Selection: ")
           if choice == "1":
              try:
-                print(outfile)
+                print(yellow+outfile)
                 os.mkdir(target)
                 os.chdir(target)
                 os.system(outfile)
@@ -117,7 +118,7 @@ def main():
                 total1 = t3 - t1
                 print("-" * 60)
                 print("Combined scan completed in "+str(total1))
-                print("Press enter to quit...")
+                print("%sPress enter to quit..."% white)
                 input()
              except FileExistsError as e:
                 print(e)
@@ -127,7 +128,7 @@ def main():
           elif choice =="3":
              sys.exit()
           else:
-             print("Please make a valid selection")
+             print("%sPlease make a valid selection"%yellow)
              automate()
     automate()
 
@@ -135,5 +136,5 @@ if __name__ == '__main__':
     try:
         main()
     except KeyboardInterrupt:
-        print("\nGoodbye!")
+        print("\n%sGoodbye!"%red)
         quit()
