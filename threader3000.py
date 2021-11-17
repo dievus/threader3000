@@ -1,139 +1,117 @@
-#!/usr/bin/python3
-# Threader3000 - Multi-threader Port Scanner
-# A project by The Mayor
-# v1.0.6
-# https://github.com/dievus/threader3000
-# Licensed under GNU GPLv3 Standards.  https://www.gnu.org/licenses/gpl-3.0.en.html
-
-
-import socket
-import os
-import signal
+import requests as o365request
+import argparse
 import time
-import threading
+import re
+import textwrap
 import sys
-import subprocess
-from queue import Queue
 from datetime import datetime
 
-# Start Threader3000 with clear terminal
-subprocess.call('clear', shell=True)
+print("-" * 60)
+print("                MayorSec Oh365 User Finder              ")
+print("                       Version 1.0.0                    ")
+print("                   A project by The Mayor               ")
+print("           Oh365UserFinder.py -h to get started         ")
+print("-" * 60)
+opt_parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, epilog=textwrap.dedent(
+    '''Example: python3 Oh365UserFinder.py -e test@test.com
+Example: python3 Oh365UserFinder.py -r testemails.txt -w valid.txt -v y
+Example: python3 Oh365UserFinder.py -r emails.txt -w validemails.txt -t 30 -v y
+'''))
+opt_parser.add_argument(
+    '-e', '--email', help='Runs o365UserFinder against a single email')
+opt_parser.add_argument('-r', '--read', help='Reads email addresses from file')
+opt_parser.add_argument('-t', '--threading',
+                        help='Set threading between checks')
+opt_parser.add_argument('-w', '--write', help='Writes valid emails to file')
+opt_parser.add_argument(
+    '-v', '--verbose', help='Prints output verbosely - use y or n options', metavar=['y', 'n'])
+args = opt_parser.parse_args()
+ms_url = 'https://login.microsoftonline.com/common/GetCredentialType'
 
-# Main Function
+
 def main():
-    socket.setdefaulttimeout(0.30)
-    print_lock = threading.Lock()
-    discovered_ports = []
-
-# Welcome Banner
-    print("-" * 60)
-    print("        Threader 3000 - Multi-threaded Port Scanner          ")
-    print("                       Version 1.0.6                    ")
-    print("                   A project by The Mayor               ")
-    print("-" * 60)
-    time.sleep(1)
-    target = input("Enter your target IP address or URL here: ")
-    error = ("Invalid Input")
-    try:
-        t_ip = socket.gethostbyname(target)
-    except (UnboundLocalError, socket.gaierror):
-        print("\n[-]Invalid format. Please use a correct IP or web address[-]\n")
-        sys.exit()
-    #Banner
-    print("-" * 60)
-    print("Scanning target "+ t_ip)
-    print("Time started: "+ str(datetime.now()))
-    print("-" * 60)
+    if args.threading is not None:
+        print(
+            f'\n[*] Threading set to {args.threading} seconds between requests. [*]\n')
+    counter = 0
     t1 = datetime.now()
+    if args.email is not None:
+        email = args.email
+        s = o365request.session()
+        body = '{"Username":"%s"}' % email
+        request = o365request.post(ms_url, data=body)
+        response = request.text
+        valid_response = re.search('"IfExistsResult":0,', response)
+        invalid_response = re.search('"IfExistsResult":1,', response)
+        if invalid_response:
+            print("[-] " + email + " - Invalid Email [-]")
+        if valid_response:
+            print("[+] " + email + " - Valid Email Found! [+]")
+        if args.threading is not None:
+            time.sleep(int(args.threading))
 
-    def portscan(port):
+    elif args.read is not None:
+        with open(args.read) as input_emails:
+            for line in input_emails:
+                s = o365request.session()
+                if args.verbose == 'y':
+                    print(s)
+                email_line = line.split()
+                if args.verbose == 'y':
+                    print(email_line)
+                email = ' '.join(email_line)
+                if args.verbose == 'y':
+                    print(email)
+                body = '{"Username":"%s"}' % email
+                if args.verbose == 'y':
+                    print(body)
+                request = o365request.post(ms_url, data=body)
+                if args.verbose == 'y':
+                    print(request)
+                response = request.text
+                if args.verbose == 'y':
+                    print(response)
+                valid_response = re.search('"IfExistsResult":0,', response)
+                if args.verbose == 'y':
+                    print(valid_response)
+                invalid_response = re.search('"IfExistsResult":1,', response)
+                if args.verbose == 'y':
+                    print(invalid_response)
+                if invalid_response:
+                    print("[-] " + email + " - Invalid Email [-]")
+                if valid_response:
+                    print("[+] " + email + " - Valid Email Found! [+]")
+                    counter = counter + 1
+                    # print(counter)
+                    if args.write is not None:
+                        with open(args.write, 'a+') as valid_emails_file:
+                            valid_emails_file.write(email+'\n')
+                if args.threading is not None:
+                    time.sleep(int(args.threading))
+            if counter == 0:
+                print("\n[-] There were no valid logins found. [-]")
+                t2 = datetime.now()
+                total = t2 - t1
+                print(f'\n[*] Total scan time {total} [*]')
+            elif counter == 1:
+                print(
+                    "\n[*] Oh365 User Finder discovered one valid login account. [*]")
+                t2 = datetime.now()
+                total = t2 - t1
+                print(f'\n[*] Total scan time {total} [*]')
+            else:
+                print(
+                    f'\n[*] Oh365 User Finder discovered {counter} valid login accounts. [*]')
+                t2 = datetime.now()
+                total = t2 - t1
+                print(f'\n[*] Scan completed in {total} [*]')
+    else:
+        sys.exit()
 
-       s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-       
-       try:
-          conx = s.connect((t_ip, port))
-          with print_lock:
-             print("Port {} is open".format(port))
-             discovered_ports.append(str(port))
-          conx.close()
 
-       except (ConnectionRefusedError, AttributeError, OSError):
-          pass
-
-    def threader():
-       while True:
-          worker = q.get()
-          portscan(worker)
-          q.task_done()
-      
-    q = Queue()
-     
-    #startTime = time.time()
-     
-    for x in range(200):
-       t = threading.Thread(target = threader)
-       t.daemon = True
-       t.start()
-
-    for worker in range(1, 65536):
-       q.put(worker)
-
-    q.join()
-
-    t2 = datetime.now()
-    total = t2 - t1
-    print("Port scan completed in "+str(total))
-    print("-" * 60)
-    print("Threader3000 recommends the following Nmap scan:")
-    print("*" * 60)
-    print("nmap -p{ports} -sV -sC -T4 -Pn -oA {ip} {ip}".format(ports=",".join(discovered_ports), ip=target))
-    print("*" * 60)
-    outfile = "nmap -p{ports} -sV -sC -Pn -T4 -oA {ip} {ip}".format(ports=",".join(discovered_ports), ip=target)
-    t3 = datetime.now()
-    total1 = t3 - t1
-
-#Nmap Integration (in progress)
-
-    def automate():
-       choice = '0'
-       while choice =='0':
-          print("Would you like to run Nmap or quit to terminal?")
-          print("-" * 60)
-          print("1 = Run suggested Nmap scan")
-          print("2 = Run another Threader3000 scan")
-          print("3 = Exit to terminal")
-          print("-" * 60)
-          choice = input("Option Selection: ")
-          if choice == "1":
-             try:
-                print(outfile)
-                os.mkdir(target)
-                os.chdir(target)
-                os.system(outfile)
-                #The xsltproc is experimental and will convert XML to a HTML readable format; requires xsltproc on your machine to work
-                #convert = "xsltproc "+target+".xml -o "+target+".html"
-                #os.system(convert)
-                t3 = datetime.now()
-                total1 = t3 - t1
-                print("-" * 60)
-                print("Combined scan completed in "+str(total1))
-                print("Press enter to quit...")
-                input()
-             except FileExistsError as e:
-                print(e)
-                exit()
-          elif choice =="2":
-             main()
-          elif choice =="3":
-             sys.exit()
-          else:
-             print("Please make a valid selection")
-             automate()
-    automate()
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     try:
         main()
     except KeyboardInterrupt:
-        print("\nGoodbye!")
+        print("\nYou either fat fingered this, or meant to do it. Either way, goodbye!")
         quit()
