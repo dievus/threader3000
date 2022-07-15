@@ -70,7 +70,7 @@ def main():
      
     #startTime = time.time()
      
-    for x in range(200):
+    for x in range(1500):
        t = threading.Thread(target = threader)
        t.daemon = True
        t.start()
