@@ -17,7 +17,7 @@ from queue import Queue
 from datetime import datetime
 
 # Start Threader3000 with clear terminal
-subprocess.call('clear', shell=True)
+# subprocess.call('clear', shell=True)
 
 # Main Function
 def main():
